@@ -1,5 +1,5 @@
-const CACHE = 'mi-mercado-v5';
-const API_CACHE = 'mi-mercado-api-v1';
+const CACHE = 'mi-mercado-v6';
+const API_CACHE = 'mi-mercado-api-v2';
 const BASE = self.location.pathname.replace(/\/sw\.js$/, '');
 
 const STATIC_URLS = [
