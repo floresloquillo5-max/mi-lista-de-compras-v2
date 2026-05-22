@@ -59,12 +59,8 @@ export function setupFaq(): void {
     q.addEventListener('click', () => {
       const item = q.closest('.faq-item');
       if (!item) return;
-      item.classList.toggle('active');
+      item.classList.toggle('open');
     });
-  });
-
-  document.querySelectorAll('.faq-item').forEach(item => {
-    item.classList.add('active');
   });
 }
 
