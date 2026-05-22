@@ -1,24 +1,20 @@
-const CACHE = 'mi-mercado-v4';
+const CACHE = 'mi-mercado-v5';
+const BASE = self.location.pathname.replace(/\/sw\.js$/, '');
+
 const STATIC_URLS = [
-  '/milista/',
-  '/milista/index.html',
-  '/milista/style.css',
-  '/milista/dist/app.js',
-  '/milista/manifest.json',
+  BASE + '/index.html',
+  BASE + '/style.css',
+  BASE + '/dist/app.js',
+  BASE + '/manifest.json',
 ];
 
 self.addEventListener('install', function(event) {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE);
-      const results = await Promise.allSettled(
+      await Promise.allSettled(
         STATIC_URLS.map(url =>
-          cache.add(url).catch(() => {
-            // If one asset fails, try with a plain fetch + put
-            return fetch(url).then(r => {
-              if (r.ok) cache.put(url, r);
-            }).catch(() => {});
-          })
+          cache.add(url).catch(() => {})
         )
       );
       self.skipWaiting();
@@ -38,7 +34,6 @@ self.addEventListener('activate', function(event) {
   );
 });
 
-// Network-first for same-origin, with offline fallback to cache
 async function networkFirstWithCacheFallback(request) {
   try {
     const response = await fetch(request);
@@ -50,11 +45,10 @@ async function networkFirstWithCacheFallback(request) {
   } catch {
     const cached = await caches.match(request);
     if (cached) return cached;
-    // Final fallback: serve the cached index.html for any navigation
     if (request.mode === 'navigate') {
-      return caches.match('/milista/index.html');
+      return caches.match(BASE + '/index.html');
     }
-    throw new Error('offline');
+    return new Response('Offline', { status: 503 });
   }
 }
 
@@ -62,7 +56,6 @@ self.addEventListener('fetch', function(event) {
   const request = event.request;
   const url = new URL(request.url);
 
-  // API/external calls: network-first with cache fallback
   if (url.hostname !== self.location.hostname) {
     event.respondWith(
       fetch(request).then(function(response) {
@@ -76,7 +69,5 @@ self.addEventListener('fetch', function(event) {
     return;
   }
 
-  // For same-origin: use network-first with cache fallback
-  // This ensures fresh content when online, and cached content when offline
   event.respondWith(networkFirstWithCacheFallback(request));
 });
