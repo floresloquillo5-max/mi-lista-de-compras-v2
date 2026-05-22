@@ -1,5 +1,5 @@
-const CACHE = 'mi-mercado-v6';
-const API_CACHE = 'mi-mercado-api-v2';
+const CACHE = 'mi-mercado-v7';
+const API_CACHE = 'mi-mercado-api-v3';
 const BASE = self.location.pathname.replace(/\/sw\.js$/, '');
 
 const STATIC_URLS = [
@@ -7,6 +7,7 @@ const STATIC_URLS = [
   BASE + '/style.css',
   BASE + '/dist/app.js',
   BASE + '/manifest.json',
+  BASE + '/favicon.png',
   BASE + '/icon.svg',
   BASE + '/icon-192.png',
   BASE + '/icon-512.png',
@@ -47,11 +48,24 @@ self.addEventListener('activate', function(event) {
 async function staleWhileRevalidate(request) {
   const cache = await caches.open(API_CACHE);
   const cached = await cache.match(request);
-  const fetchPromise = fetch(request).then(response => {
+
+  if (cached) {
+    fetch(request).then(response => {
+      if (response.ok) cache.put(request, response.clone());
+    }).catch(() => {});
+    return cached;
+  }
+
+  try {
+    const response = await fetch(request);
     if (response.ok) cache.put(request, response.clone());
     return response;
-  }).catch(() => cached);
-  return cached || fetchPromise;
+  } catch {
+    return new Response(
+      JSON.stringify({ error: 'offline', message: 'No hay conexión para obtener la tasa de cambio' }),
+      { status: 503, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
 }
 
 async function networkFirstWithCacheFallback(request) {
