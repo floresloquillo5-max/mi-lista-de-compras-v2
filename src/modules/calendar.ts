@@ -193,12 +193,12 @@ export function toggleQuickForm(): void {
   const form = document.getElementById('calQuickForm');
   if (!form) return;
   AppState.state.quickFormActive = !AppState.state.quickFormActive;
-  form.style.display = AppState.state.quickFormActive ? 'block' : 'none';
+  form.classList.toggle('visible', AppState.state.quickFormActive);
 }
 
 export function closeQuickForm(): void {
   const form = document.getElementById('calQuickForm');
-  if (form) form.style.display = 'none';
+  if (form) form.classList.remove('visible');
   AppState.state.quickFormActive = false;
 }
 
@@ -267,10 +267,10 @@ export function exportCalendarMonth(): void {
 export function toggleMonthPicker(): void {
   const picker = document.getElementById('calMonthPicker');
   if (!picker) return;
-  const isVisible = picker.style.display === 'block';
-  picker.style.display = isVisible ? 'none' : 'block';
+  const wasHidden = !picker.classList.contains('visible');
+  picker.classList.toggle('visible');
 
-  if (!isVisible) {
+  if (wasHidden) {
     const grid = document.getElementById('calMpGrid');
     if (!grid) return;
     const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -284,5 +284,5 @@ export function jumpToMonth(month: string): void {
   renderCalendar();
   updateCalendarSummary();
   const picker = document.getElementById('calMonthPicker');
-  if (picker) picker.style.display = 'none';
+  if (picker) picker.classList.remove('visible');
 }

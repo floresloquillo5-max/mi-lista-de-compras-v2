@@ -8,7 +8,7 @@ export function toggleManualInput(): void {
   const manualInputs = document.getElementById('manualInputs');
   const listInfo = document.getElementById('listInfo');
   if (!toggle || !manualInputs || !listInfo) return;
-  manualInputs.style.display = toggle.checked ? 'block' : 'none';
+  manualInputs.classList.toggle('visible', toggle.checked);
   listInfo.textContent = toggle.checked
     ? '✏️ Usando monto manual'
     : '📋 Usando total seleccionado de la lista';

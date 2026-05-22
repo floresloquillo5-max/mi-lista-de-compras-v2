@@ -749,9 +749,8 @@ export function toggleDebtForm(): void {
   const form = document.getElementById('debtForm');
   const icon = document.getElementById('debtFormToggleIcon');
   if (!form || !icon) return;
-  const isVisible = form.style.display === 'block';
-  form.style.display = isVisible ? 'none' : 'block';
-  icon.textContent = isVisible ? '▼' : '▲';
+  form.classList.toggle('visible');
+  icon.textContent = form.classList.contains('visible') ? '▲' : '▼';
 }
 
 export function addDebt(): void {
