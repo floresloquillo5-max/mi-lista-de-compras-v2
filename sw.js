@@ -1,10 +1,10 @@
 const CACHE = 'mi-mercado-v4';
 const STATIC_URLS = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/dist/app.js',
-  '/manifest.json',
+  '/milista/',
+  '/milista/index.html',
+  '/milista/style.css',
+  '/milista/dist/app.js',
+  '/milista/manifest.json',
 ];
 
 self.addEventListener('install', function(event) {
@@ -52,7 +52,7 @@ async function networkFirstWithCacheFallback(request) {
     if (cached) return cached;
     // Final fallback: serve the cached index.html for any navigation
     if (request.mode === 'navigate') {
-      return caches.match('/index.html');
+      return caches.match('/milista/index.html');
     }
     throw new Error('offline');
   }
