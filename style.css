@@ -2592,14 +2592,16 @@ body {
 }
 .edit-actions {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   align-items: flex-end;
   padding-bottom: 2px;
+  flex-shrink: 0;
 }
 .edit-actions .btn {
-  padding: 6px 10px;
+  padding: 7px 14px;
   font-size: 0.78rem;
-  min-width: 32px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* ===== NOTIFICATIONS ===== */
